@@ -28,7 +28,7 @@ while continue_iteration %continiue until user finds result satisfactory
     hold on
     plot(t_k, u_k, 'r--','LineWidth',2);
     xlabel('t'); ylabel('N(t)');
-    legend(['t_k_-_1=',num2str(dt_k_prev)],['t_k=',num2str(dt_k)])
+    legend(['{\Delta}t_k_-_1=',num2str(dt_k_prev)],['{\Delta}t_k=',num2str(dt_k)],'Location','northwest')
     title('Numerical Solution of Logistic Equation')
     
     
@@ -56,7 +56,7 @@ end
 % so we rather do it like this:
 dt_k_prev_str = strrep(num2str(dt_k_prev),'.','_');
 dt_k_str = strrep(num2str(dt_k),'.','_');
-filename = strcat('tmp_dt_k-1=',dt_k_prev_str,'_dt_k=',dt_k_str);
+filename = strcat('ex_4_4_dt_k-1=',dt_k_prev_str,'_dt_k=',dt_k_str);
 
 print(filename, '-dpng');
 

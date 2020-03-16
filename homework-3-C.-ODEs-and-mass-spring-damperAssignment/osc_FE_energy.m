@@ -9,7 +9,7 @@ close all
 
 omega = 2;
 P = 2*pi/omega;
-dt = P/200;
+dt = P/20;
 T = 4*P;
 N_t = floor(T/dt);
 t = linspace(0, N_t*dt, N_t+1);
