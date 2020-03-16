@@ -1,9 +1,14 @@
+%{
+numerical solution to an oscillating system
+using backward Euler
+%}
+
 close all
 clear 
 omega = 2;
 P = 2*pi/omega;
-dt = P/20000;
-T = 40*P;
+dt = P/20;
+T = 4*P;
 N_t = floor(round(T/dt));
 t = linspace(0, N_t*dt, N_t+1);
 fprintf('N_t: %d\n', N_t);
@@ -31,52 +36,13 @@ plot(t(length(t)-N4l:end), u(length(u)-N4l:end), 'b-',...
 legend('numerical', 'exact', 'Location','northwest');
 xlabel('t');
 fprintf('%.16f %.16f \n', u(end), v(end));
+ylabel('y');
+title('Comparing Numerical Solution to Analytical')
 
+figure %plotting total energy
 [pot_energy, kin_energy] = osc_energy(u,v,omega);
 energy_all = pot_energy + kin_energy;
-figure 
 plot(t, energy_all, 'b-');
-hold on
-
-%%
-for n = 1:N_t
-    v(n+1) = v(n) - dt*omega^2 * (u(n)+dt*v(n))/(1+dt^2*omega^2);
-    u(n+1) = (u(n)+dt*v(n))/(1+dt^2*omega^2);
-end
-% Plot the last four periods to illustrate the accuracy
-% in long time simulations
-N4l = floor(round(4*P/dt)); % No of intervals to be plotted
-true_sol = X_0*cos(omega*t);
-figure(1)
-plot(t(length(t)-N4l:end), u(length(u)-N4l:end), 'g',...
-       t(length(t)-N4l:end), true_sol(length(true_sol)-N4l:end), 'r--');
-legend('numerical', 'exact', 'Location','northwest');
 xlabel('t');
-fprintf('%.16f %.16f \n', u(end), v(end));
-
-[pot_energy, kin_energy] = osc_energy(u,v,omega);
-energy_all = pot_energy + kin_energy; 
-figure(2)
-plot(t, energy_all, 'b-');
-
-%%
-for n = 1:N_t
-    
-    u(n+1) = (u(n)+dt*v(n))/(1+dt^2*omega^2);
-    v(n+1) = v(n) - dt*omega^2 * u(n+1);
-end
-% Plot the last four periods to illustrate the accuracy
-% in long time simulations
-N4l = floor(round(4*P/dt)); % No of intervals to be plotted
-true_sol = X_0*cos(omega*t);
-figure(1)
-plot(t(length(t)-N4l:end), u(length(u)-N4l:end), 'b--',...
-       t(length(t)-N4l:end), true_sol(length(true_sol)-N4l:end), 'r--');
-legend('numerical', 'exact', 'Location','northwest');
-xlabel('t');
-fprintf('%.16f %.16f \n', u(end), v(end));
-
-[pot_energy, kin_energy] = osc_energy(u,v,omega);
-energy_all = pot_energy + kin_energy; 
-figure(2)
-plot(t, energy_all, 'b-');
+ylabel('Energy');
+title('Total Energy in Oscillating System')

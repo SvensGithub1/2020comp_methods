@@ -1,9 +1,14 @@
+%{
+numerical solution to an oscillating system
+using Euler-Cromer
+%}
+
 close all
 clear 
 omega = 2;
 P = 2*pi/omega;
 dt = P/20;
-T = 40*P;
+T = 4*P;
 N_t = floor(round(T/dt));
 t = linspace(0, N_t*dt, N_t+1);
 fprintf('N_t: %d\n', N_t);
@@ -30,8 +35,13 @@ plot(t(length(t)-N4l:end), u(length(u)-N4l:end), 'b-',...
 legend('numerical', 'exact', 'Location','northwest');
 xlabel('t');
 fprintf('%.16f %.16f \n', u(end), v(end));
+ylabel('y');
+title('Comparing Numerical Solution to Analytical')
 
+figure %plotting total energy
 [pot_energy, kin_energy] = osc_energy(u,v,omega);
 energy_all = pot_energy + kin_energy;
-figure
 plot(t, energy_all, 'b-');
+xlabel('t');
+ylabel('Energy');
+title('Total Energy in Oscillating System')

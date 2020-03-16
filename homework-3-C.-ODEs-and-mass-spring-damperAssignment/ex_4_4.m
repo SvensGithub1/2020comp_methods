@@ -17,7 +17,8 @@ dt_k = 0;
 u_k = 0;
 t_k = 0;
 k=0;
-while continue_iteration %c
+while continue_iteration %continiue until user finds result satisfactory
+    figure(1)
     k=k+1;
     dt_k = 2^(-k) * delta_t;
     [u_k, t_k] = ode_FE(f, U_0, dt_k, T);
@@ -28,16 +29,25 @@ while continue_iteration %c
     plot(t_k, u_k, 'r--','LineWidth',2);
     xlabel('t'); ylabel('N(t)');
     legend(['t_k_-_1=',num2str(dt_k_prev)],['t_k=',num2str(dt_k)])
+    title('Numerical Solution of Logistic Equation')
     
-    disp('Please compare the plotted lines, and decide if iteration should continue.');
-    user_input =input('Input Y to to continue the iteration process: ','s');
-    if strcmp('Y', user_input) == false
-        continue_iteration = false;
-        disp('The ideration has ended.')
-    else
-        dt_k_prev = dt_k;
-        u_k_prev = u_k;
-        t_k_prev = t_k;
+    
+    while true
+        disp('Please compare the plotted lines and decide if the iteration should continue.');
+    user_input =input('Continue the iteration process [y/n]: ','s');
+        if strcmp('n', user_input)
+            continue_iteration = false;
+            disp('The ideration has ended.')
+            break
+        elseif strcmp('y', user_input) %k becomes k-1
+            dt_k_prev = dt_k;
+            u_k_prev = u_k;
+            t_k_prev = t_k;
+            break
+        else
+            disp('please provide valid answer')
+            
+        end
     end
     hold off
 end
@@ -46,8 +56,8 @@ end
 % so we rather do it like this:
 dt_k_prev_str = strrep(num2str(dt_k_prev),'.','_');
 dt_k_str = strrep(num2str(dt_k),'.','_');
-filestem = strcat('tmp_dt_k-1=',dt_k_prev_str,'_dt_k=',dt_k_str);
-filename = strcat(filestem);
+filename = strcat('tmp_dt_k-1=',dt_k_prev_str,'_dt_k=',dt_k_str);
+
 print(filename, '-dpng');
-filename = strcat(filestem, '-dpdf');
+
 print(filename, '-dpdf');
