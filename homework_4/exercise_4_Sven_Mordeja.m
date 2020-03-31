@@ -52,7 +52,7 @@ plot(t(1:length(dTheta_dt)),dTheta_dt,'k','linewidth', 2)
 xlabel('t [s]')
 ylabel('dTheta/dt [rad/s]')
 title('angular velocity dTheta/dt over time')
-saveas(figure(2),'angular_v_over_time','emf')
+saveas(figure(4),'angular_v_over_time','emf')
 
 function P = constraint(u, a, b, phi_1)
 phi_2 = u(1);
