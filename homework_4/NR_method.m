@@ -17,5 +17,6 @@ end
 % Here, either a solution is found, or too many iterations
 if F_norm > eps
     iteration_counter = -1;
+    disp('Warning: Too many iterations');
 end
 end
