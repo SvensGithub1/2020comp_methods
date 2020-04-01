@@ -33,7 +33,7 @@ figure_1_gca=gca;
 
 
 figure(2)
-plot(t,u_ges(2,:),'r','linewidth', 2)
+plot(t,u_ges(2,:),'linewidth', 2)
 xlabel('t [s]')
 ylabel('d [m]')
 title('d over time')
@@ -44,7 +44,7 @@ dd_dt = diff(u_ges(2,:))/step_size;   % first derivative
 dTheta_dt = diff(u_ges(1,:))/step_size;   % second derivative
 
 figure(3)
-plot(t(1:length(dd_dt)),dd_dt,'linewidth', 2)
+plot(t(1:length(dd_dt)),dd_dt,'r','linewidth', 2)
 xlabel('t [s]')
 ylabel('v [m/s]')
 title('v over time')
