@@ -1,3 +1,6 @@
+
+
+
 % solution for simple slider-crank mechanism
 close all
 clear
