@@ -30,3 +30,6 @@ octave-workspace
 
 # Windows Thumbs.db files
 Thumbs.db
+
+# generated images
+*.emf
