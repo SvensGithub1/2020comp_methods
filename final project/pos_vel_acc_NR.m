@@ -16,6 +16,7 @@ Q(1, :) = qi';
 QP(1, :) = qip';
 QPP(1, :) = qipp';
 % Step equations forward in time
+ictnt_ges =zeros(N_t);
 for n = 1 : N_t
     [qi, icnt] = NR_method(@(q) C_fun(T(n + 1), q), ...
         @(q) Cq_fun(T(n + 1), q), ...
@@ -23,7 +24,7 @@ for n = 1 : N_t
     Cqi = Cq_fun(T(n + 1), qi);
     qip = -Cqi\Ct_fun(T(n + 1), qi);
     qipp = Cqi\g(T(n + 1), qi,qip);
-    disp(icnt)
+    ictnt_ges(n)=icnt;
     Q(n + 1, :) = qi';
     QP(n + 1, :) = qip';
     QPP(n + 1, :) = qipp';
