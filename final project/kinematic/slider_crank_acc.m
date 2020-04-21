@@ -1,5 +1,5 @@
 % Slider crank kinematic analysis
-close all
+close 
 clear
 %% Coordinates
 % ground
@@ -136,7 +136,10 @@ plot(Q(:, 4), Q(:, 5), ...
     Q(:, 10), Q(:, 11), ...
     0, 0, '*', 'LineWidth', 2);
 axis equal
-
+xlabel ('x')
+ylabel ('y')
+title ('positions of bodies')
+legend('body 1', 'body 2', 'body 3', 'origin')
 figure
 %% Some verification plots
 plot(QP(:, 4), QP(:, 5), ...
@@ -144,17 +147,40 @@ plot(QP(:, 4), QP(:, 5), ...
     QP(:, 10), QP(:, 11), ...
     0, 0, '*', 'LineWidth', 2);
 axis equal
+xlabel ('v_x')
+ylabel ('v_y')
+title ('velocity of bodies')
+legend('body 1', 'body 2', 'body 3', 'origin')
 
-figure
-plot(QPP(:, 4), QPP(:, 5), ...
-    QPP(:, 7), QPP(:, 8), ...
-    QPP(:, 10), QPP(:, 11), ...
-    0, 0, '*', 'LineWidth', 2);
+%% veryfy acceleration using numerical diff
+%{ 
+
 figure
 plot(diff(QP(:, 4))./0.1, diff(QP(:, 5))./0.1, ...
     diff(QP(:, 7))./0.1, diff(QP(:, 8))./0.1, ...
     diff(QP(:, 10))./0.1, diff(QP(:, 11))./0.1, ...
     0, 0, '*', 'LineWidth', 2);
 axis equal
-   
+%}
+
+figure
+plot(QPP(:, 4), QPP(:, 5), ...
+    QPP(:, 7), QPP(:, 8), ...
+    QPP(:, 10), QPP(:, 11), ...
+    0, 0, '*', 'LineWidth', 2);
+axis equal
+xlabel ('a_x')
+ylabel ('a_y')
+title ('acceleration of bodies')
+legend('body 1', 'body 2', 'body 3', 'origin')
+
+%% plot over time
+figure
+hold on
+plot(T, Q(:, 10),'LineWidth', 2);
+plot(T, QP(:, 10),'LineWidth', 2);
+plot(T, QPP(:, 10),'LineWidth', 2);
+xlabel ('t')
+title ('position, velocity and acceleration of body 3')
+legend('position [m]', 'velocity [m/s]', 'acceleration [m/s^2]')
     
