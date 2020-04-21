@@ -1,4 +1,7 @@
+close all
+clear
 %% Define one body
+
 body.m = 2; % mass equals to one kg
 l = 1; 
 body.Ic = body.m * l^2 / 12; % mass moment of inertia along center of mass in kgm2
@@ -25,7 +28,7 @@ acc_f = @(~, ~, ~) M\F;
 plot(t, u(:, 2), t, u(1, 2)-9.81 / 2 .* t .^ 2)
 
 %% Add single force to the system
-sforce.f = [1; 0];
+sforce.f = [10; 0];
 sforce.i = 1;
 sforce.u_i = [0; 1];
 
@@ -37,6 +40,9 @@ acc_f = @(t, q, qp) system_accelerations(t, q, qp, M, sforce, grav, body);
 [t, u, v] = EulerCromer(acc_f, 2, q0, zeros(size(q0)), 0.001);
 
 %% Verification plots part 2
+figure
 plot(t, u(:, 2), t, u(1, 2)-9.81 / 2 .* t .^ 2)
+figure
 plot(t, u(:, 1), t, u(1, 1) + 0.25 * t .^ 2)
+figure
 plot(t, u(:, 3))
