@@ -55,7 +55,7 @@ simple(3).c_k = 0;
 
 driving = [];
 
-%% Solvin ode
+%% Solve constraint equation using NR for position and velocity
 C_fun = @(t, q) constraint(revolute, simple,driving, t, q);
 Cq_fun = @(t, q) constraint_dq(revolute, simple,driving, t, q);
 Ct_fun = @(t, q) constraint_dt(revolute, simple,driving, t, q);
@@ -63,18 +63,12 @@ g =  @(t, q, q_p) constraint_g(revolute, simple,driving, t, q, q_p);
 
 %%[T, Q, QP, QPP] = pos_vel_acc_NR(C_fun, Cq_fun, Ct_fun,g, 6, q_0, 0.1);
 
+%% Solvin ode
 t_0 = 0;
 t_end = 10;
 
 
-[t, u, v] = acceleration_ode_solve(M,sforce,C_fun,Cq_fun,Ct_fun,g, t_0,t_end,  q_0, grav, body);
-
-a=zeros(size(u));
-for ii =1:length(t)
-a(ii,:) = Cq_fun(t(ii),u(ii,:)) \ g(t(ii),u(ii,:),v(ii,:)) ;
-end
-
-
+[t, u, v , a] = acceleration_ode_solve(M,sforce,C_fun,Cq_fun,Ct_fun,g, t_0,t_end,  q_0, grav, body);
 %% veryfining plots
 figure
 hold on
@@ -91,6 +85,7 @@ plot(t, u(:, 4),'lineWidth', 2)
 hold on
 plot(t, v(:, 4),'lineWidth', 2)
 plot(t, a(:, 4),'lineWidth', 2)
+
 xlabel ('t')
 title ('position, velocity and acceleration of body 3')
 legend('position [m]', 'velocity [m/s]', 'acceleration [m/s^2]')
