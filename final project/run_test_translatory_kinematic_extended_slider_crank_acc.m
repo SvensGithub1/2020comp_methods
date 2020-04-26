@@ -1,5 +1,5 @@
 % Slider crank kinematic analysis
-close 
+ close all
 clear
 %% Coordinates
 % ground
@@ -63,22 +63,20 @@ simple(3).i = 1;
 simple(3).k = 3;
 simple(3).c_k = 0;
 
-% slider - use simple joints instead of translational
-simple(4).i = 4;
-simple(4).k = 2;
-simple(4).c_k = 0;
 
-simple(5).i = 4;
-simple(5).k = 3;
-simple(5).c_k = 0;
 
 % % check simple constraints
 % for s = simple
 %     C_s_i = simple_joint(s.i, s.k, s.c_k, q_0)
 % end
-
 %% translatory constraints
-translatory =[];
+translatory(1).i =1;
+translatory(1).j =3;
+translatory(1).s_i_p = [0;0];
+translatory(1).s_i_q = [-1;0];
+translatory(1).s_j_p = [-0.2;0];
+% slider - use simple joints instead of translational
+
 %% Add some driving constraints
 driving.i = 2;
 driving.k = 3;
@@ -94,37 +92,10 @@ driving.d_k_tt = @(t) 0;
 % clc
 % C = constraint(revolute, simple, driving, 0, q_0)
 
-%% Solve constraint equation using fsolve
-C_fun = @(t, q) constraint(revolute, simple,translatory, driving, t, q);
-[T, Q] = position_fsolve(C_fun, 1, q_0, 0.1);
 
-%% Some verification plots
-plot(Q(:, 4), Q(:, 5), ...
-    Q(:, 7), Q(:, 8), ...
-    Q(:, 10), Q(:, 11), ...
-    0, 0, '*', 'LineWidth', 2);
-axis equal
-
-%% Jacobian of our constraints
-Cq = constraint_dq(revolute, simple,translatory, driving, 0, q_0)
-
-%% Solve constraint equation using NR
-C_fun = @(t, q) constraint(revolute, simple, translatory,driving, t, q);
-Cq_fun = @(t, q) constraint_dq(revolute, simple,translatory, driving, t, q);
-[T, Q] = position_NR(C_fun, Cq_fun, 1, q_0, 0.1);
-
-%% Some verification plots
-plot(Q(:, 4), Q(:, 5), ...
-    Q(:, 7), Q(:, 8), ...
-    Q(:, 10), Q(:, 11), ...
-    0, 0, '*', 'LineWidth', 2);
-axis equal
-
-%% Verify Ct
-Ct = constraint_dt(revolute, simple,translatory, driving, 0, q_0)
 
 %% Solve constraint equation using NR for position and velocity
-C_fun = @(t, q) constraint(revolute, simple, translatory, driving, t, q);
+C_fun = @(t, q) constraint(revolute, simple, translatory, driving, t, q, q_0);
 Cq_fun = @(t, q) constraint_dq(revolute, simple,translatory, driving, t, q);
 Ct_fun = @(t, q) constraint_dt(revolute, simple,translatory, driving, t, q);
 g =  @(t, q, q_p) constraint_g(revolute, simple,translatory, driving, t, q, q_p);
@@ -137,7 +108,7 @@ plot(Q(:, 4), Q(:, 5), ...
     Q(:, 7), Q(:, 8), ...
     Q(:, 10), Q(:, 11), ...
     0, 0, '*', 'LineWidth', 2);
-axis equal
+
 xlabel ('x')
 ylabel ('y')
 title ('positions of bodies')
@@ -170,7 +141,7 @@ plot(QPP(:, 4), QPP(:, 5), ...
     QPP(:, 7), QPP(:, 8), ...
     QPP(:, 10), QPP(:, 11), ...
     0, 0, '*', 'LineWidth', 2);
-axis equal
+
 xlabel ('a_x')
 ylabel ('a_y')
 title ('acceleration of bodies')

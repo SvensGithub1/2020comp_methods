@@ -1,4 +1,4 @@
-% Slider crank kinematic analysis
+% double pendulum double drive
 close all
 clear
 %% Coordinates
@@ -9,9 +9,9 @@ q2 = [0
     -0.5
     0];
 % arm 2
-q3 = [0
-    -1-0.5*sqrt((0.5^2)/2)
-    0.5*sqrt((0.5^2)/2)];
+q3 =[0
+    -1.5
+    0];;
 q_0 = [q1; q2; q3];
 %% We need two constraint types (geometric ones)
 % - revolute
@@ -28,7 +28,7 @@ revolute(1).s_j = [0; 0.5];
 revolute(2).i = 2;
 revolute(2).j = 3;
 revolute(2).s_i = [0; -0.5];
-revolute(2).s_j = [0; 0.25];
+revolute(2).s_j = [0; 0.5];
 
 % % Check revolute joint constraints
 % r = revolute(3);
@@ -50,9 +50,6 @@ simple(3).k = 3;
 simple(3).c_k = 0;
 
 
-simple(3).i = 3;
-simple(3).k = 3;
-simple(3).c_k = pi/4;
 
 % % check simple constraints
 % for s = simple
@@ -60,12 +57,17 @@ simple(3).c_k = pi/4;
 % end
 
 %% Add some driving constraints
-driving.i = 2;
-driving.k = 3;
-driving.d_k = @(t) -0.1 * t;
-driving.d_k_t = @(t) -0.1;
-driving.d_k_tt = @(t) 0;
+driving(1).i = 2;
+driving(1).k = 3;
+driving(1).d_k = @(t) -0.1 * t;
+driving(1).d_k_t = @(t) -0.1;
+driving(1).d_k_tt = @(t) 0;
 
+driving(2).i = 3;
+driving(2).k = 3;
+driving(2).d_k = @(t) -0.5 * t;
+driving(2).d_k_t = @(t) -0.5;
+driving(2).d_k_tt = @(t) 0;
 
 % % Verify
 % d = driving(1);
@@ -75,15 +77,12 @@ driving.d_k_tt = @(t) 0;
 % clc
 % C = constraint(revolute, simple, driving, 0, q_0)
 
-%% translatory joint
-
-translatory =[];
 
 %% Solve constraint equation using NR for position and velocity
-C_fun = @(t, q) constraint(revolute, simple, translatory, driving, t, q, q_0);
-Cq_fun = @(t, q) constraint_dq(revolute, simple,translatory, driving, t, q);
-Ct_fun = @(t, q) constraint_dt(revolute, simple,translatory, driving, t, q);
-g =  @(t, q, q_p) constraint_g(revolute, simple,translatory, driving, t, q, q_p);
+C_fun = @(t, q) constraint(revolute, simple, driving, t, q);
+Cq_fun = @(t, q) constraint_dq(revolute, simple, driving, t, q);
+Ct_fun = @(t, q) constraint_dt(revolute, simple, driving, t, q);
+g =  @(t, q, q_p) constraint_g(revolute, simple, driving, t, q, q_p);
 
 [T, Q, QP, QPP] = pos_vel_acc_NR(C_fun, Cq_fun, Ct_fun,g, 100, q_0, 0.1);
 

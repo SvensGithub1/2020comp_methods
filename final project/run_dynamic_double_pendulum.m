@@ -110,3 +110,7 @@ legend('position [m]', 'velocity [m/s]', 'acceleration [m/s^2]')
 handle=gca;
 set(handle,'LineWidth',1,'fontsize',18,'FontName','Times New Roman')
 saveas(figure(2),'dyn_double_pen_ov_time','emf')    
+
+%% numerical differnce 
+plot(t(1:end-1), diff(v(:, 4))./diff(t), 'LineWidth', 2);
+plot(t(1:end-1), diff(u(:, 4))./diff(t), 'LineWidth', 2);
