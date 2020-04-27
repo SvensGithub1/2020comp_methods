@@ -1,5 +1,6 @@
-% coding two pendulums next to each other
-close all
+%% description
+% this is a kinematic analysis of two independent pendulums
+% while applying a driving constraint on each pendulum
 clear
 %% Coordinates
 % ground
@@ -83,7 +84,7 @@ driving(2).d_k_tt = @(t) 0;
 %% Solve constraint equation using NR for position and velocity
 C_fun = @(t, q) constraint(revolute, simple, translatory, driving, t, q);
 Cq_fun = @(t, q) constraint_dq(revolute, simple,translatory, driving, t, q);
-Ct_fun = @(t, q) constraint_dt(revolute, simple,translatory, driving, t, q);
+Ct_fun = @(t, q, q_p) constraint_dt(revolute, simple,translatory, driving, t, q, q_p);
 g =  @(t, q, q_p) constraint_g(revolute, simple,translatory, driving, t, q, q_p);
 
 [T, Q, QP, QPP] = pos_vel_acc_NR(C_fun, Cq_fun, Ct_fun,g, 100, q_0, 0.1);
@@ -140,7 +141,7 @@ plot(T, Q(:, 7),'LineWidth', 2);
 plot(T, QP(:, 7),'LineWidth', 2);
 plot(T, QPP(:, 7),'LineWidth', 2);
 xlabel ('t [s]')
-title ('position, velocity and acceleration of pendulum 2')
+title ({'position, velocity and acceleration in x-Direction';'of pendulum 2'})
 legend('position [m]', 'velocity [m/s]', 'acceleration [m/s^2]')
 handle=gca;
 set(handle,'LineWidth',1,'fontsize',18,'FontName','Times New Roman')

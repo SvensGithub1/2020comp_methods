@@ -10,7 +10,7 @@ QPP = zeros(N_t+1, length(q_0));
 
 [qi, icnt] = NR_method(@(q) C_fun(0, q), @(q) Cq_fun(0, q), q_0, 1e-8);
 Cqi = Cq_fun(0, qi);
-qip = -Cqi\Ct_fun(0, qi);
+qip = -Cqi\Ct_fun(0, qi, 0);
 qipp = Cqi\g(0, qi,qip);
 Q(1, :) = qi';
 QP(1, :) = qip';
@@ -22,7 +22,7 @@ for n = 1 : N_t
         @(q) Cq_fun(T(n + 1), q), ...
         qi, 1e-8);
     Cqi = Cq_fun(T(n + 1), qi);
-    qip = -Cqi\Ct_fun(T(n + 1), qi);
+    qip = -Cqi\Ct_fun(T(n + 1), qi,0);
     qipp = Cqi\g(T(n + 1), qi,qip);
     ictnt_ges(n)=icnt;
     Q(n + 1, :) = qi';

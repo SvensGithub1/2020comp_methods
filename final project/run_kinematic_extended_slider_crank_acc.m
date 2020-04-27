@@ -1,5 +1,5 @@
-% Slider crank kinematic analysis
-close 
+%% description
+% this is a kinematic analysis of a Slider crank mechanism
 clear
 %% Coordinates
 % ground
@@ -126,7 +126,7 @@ Ct = constraint_dt(revolute, simple,translatory, driving, 0, q_0)
 %% Solve constraint equation using NR for position and velocity
 C_fun = @(t, q) constraint(revolute, simple, translatory, driving, t, q);
 Cq_fun = @(t, q) constraint_dq(revolute, simple,translatory, driving, t, q);
-Ct_fun = @(t, q) constraint_dt(revolute, simple,translatory, driving, t, q);
+Ct_fun = @(t, q, q_p) constraint_dt(revolute, simple,translatory, driving, t, q, q_p);
 g =  @(t, q, q_p) constraint_g(revolute, simple,translatory, driving, t, q, q_p);
 
 [T, Q, QP, QPP] = pos_vel_acc_NR(C_fun, Cq_fun, Ct_fun,g, 6, q_0, 0.1);

@@ -1,3 +1,6 @@
+%% description
+% this is a dynamic analysis of a double pendulum
+% while applying a force  
 %% Define bodies
 close all
 clear
@@ -13,12 +16,12 @@ l = 1;
 body(2).Ic = body(2).m * l^2 / 12; % mass moment of inertia along center of mass in kgm2
 body(2).q = [0;-0.5;0];
 
-body(3).m = 1; % mass equals to one kg
-l = 0.5; 
+body(3).m = 2; % mass equals to one kg
+l = 1; 
 body(3).Ic = body(3).m * l^2 / 12; % mass moment of inertia along center of mass in kgm2
 body(3).q = [0
-    -1-0.5*sqrt((0.5^2)/2)
-    0.5*sqrt((0.5^2)/2)];
+    -1.5
+    0];
 %{
 body(3).m = 1000; % mass equals to one kg
 l = 1; 
@@ -33,7 +36,7 @@ q_0 = system_coordinates(body);
 
 
 %% Add single force to the system
-sforce.f = [10; 0]; % add force on pendulum 
+sforce.f = [20; 0]; % add force on pendulum 
 sforce.i = 2;
 sforce.u_i = [0; -1];
 
@@ -49,7 +52,9 @@ revolute(1).s_j = [0; 0.5];
 revolute(2).i = 2;
 revolute(2).j = 3;
 revolute(2).s_i = [0; -0.5];
-revolute(2).s_j = [0; 0.25];
+revolute(2).s_j = [0; 0.5];
+%% translatory joints
+translatory = [];
 
 %% Simple constraints
 
@@ -69,10 +74,10 @@ simple(3).c_k = 0;
 driving = [];
 
 %% Solve constraint equation using NR for position and velocity
-C_fun = @(t, q) constraint(revolute, simple,driving, t, q);
-Cq_fun = @(t, q) constraint_dq(revolute, simple,driving, t, q);
-Ct_fun = @(t, q) constraint_dt(revolute, simple,driving, t, q);
-g =  @(t, q, q_p) constraint_g(revolute, simple,driving, t, q, q_p);
+C_fun = @(t, q) constraint(revolute, simple,translatory, driving, t, q);
+Cq_fun = @(t, q) constraint_dq(revolute, simple, translatory, driving, t, q);
+Ct_fun = @(t, q, q_p) constraint_dt(revolute, simple, translatory, driving, t, q, q_p);
+g =  @(t, q, q_p) constraint_g(revolute, simple, translatory, driving, t, q, q_p);
 
 %%[T, Q, QP, QPP] = pos_vel_acc_NR(C_fun, Cq_fun, Ct_fun,g, 6, q_0, 0.1);
 
@@ -92,7 +97,7 @@ plot(u(:, 1), u(:, 2),'*','lineWidth', 2)
 axis equal
 xlabel ('x [m]')
 ylabel ('y [m]')
-%title ('positions of pendulums')
+title ('positions of pendulums')
 legend('pendulum 1', 'pendulum 2', 'origin')
 handle=gca;
 set(handle,'LineWidth',1,'fontsize',18,'FontName','Times New Roman')
@@ -105,12 +110,16 @@ hold on
 plot(t, v(:, 4),'lineWidth', 2)
 plot(t, a(:, 4),'lineWidth', 2)
 xlabel ('t [s]')
-%title ('position, velocity and acceleration of pendulum 2')
+title ('position, velocity and acceleration of pendulum 2 in x-direction')
 legend('position [m]', 'velocity [m/s]', 'acceleration [m/s^2]')
 handle=gca;
 set(handle,'LineWidth',1,'fontsize',18,'FontName','Times New Roman')
 saveas(figure(2),'dyn_double_pen_ov_time','emf')    
 
+
 %% numerical differnce 
+%{
+this can be used to verify the derivatives
 plot(t(1:end-1), diff(v(:, 4))./diff(t), 'LineWidth', 2);
 plot(t(1:end-1), diff(u(:, 4))./diff(t), 'LineWidth', 2);
+%}

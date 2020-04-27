@@ -1,4 +1,6 @@
-% Slider crank kinematic analysis
+%% description
+% this is a kinematic analysis of a double pendulum
+% while applying a driving constraint to one pendulum and applying a simple constraint to the other  
 close all
 clear
 %% Coordinates
@@ -82,7 +84,7 @@ translatory =[];
 %% Solve constraint equation using NR for position and velocity
 C_fun = @(t, q) constraint(revolute, simple, translatory, driving, t, q, q_0);
 Cq_fun = @(t, q) constraint_dq(revolute, simple,translatory, driving, t, q);
-Ct_fun = @(t, q) constraint_dt(revolute, simple,translatory, driving, t, q);
+Ct_fun = @(t, q, q_p) constraint_dt(revolute, simple,translatory, driving, t, q, q_p);
 g =  @(t, q, q_p) constraint_g(revolute, simple,translatory, driving, t, q, q_p);
 
 [T, Q, QP, QPP] = pos_vel_acc_NR(C_fun, Cq_fun, Ct_fun,g, 100, q_0, 0.1);
@@ -109,7 +111,7 @@ axis equal
 xlabel ('v_x [m/s]')
 ylabel ('v_y [m/s]')
 title ('velocity of bodies')
-legend('body 1', 'body 2', 'origin')
+legend('pendulum 1', 'pendulum 2', 'origin')
 
 %% veryfy acceleration using numerical diff
 %{ 
@@ -139,7 +141,7 @@ plot(T, Q(:, 7),'LineWidth', 2);
 plot(T, QP(:, 7),'LineWidth', 2);
 plot(T, QPP(:, 7),'LineWidth', 2);
 xlabel ('t [s]')
-title ('position, velocity and acceleration of pendulum 2')
+title ({'position, velocity and acceleration in x-direction'; 'of pendulum 2'})
 legend('position [m]', 'velocity [m/s]', 'acceleration [m/s^2]')
 handle=gca;
 set(handle,'LineWidth',1,'fontsize',18,'FontName','Times New Roman')

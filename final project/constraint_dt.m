@@ -1,4 +1,4 @@
-function C = constraint_dt(revolute, simple, translatory, driving, t, q)
+function C = constraint_dt(revolute, simple, translatory, driving, t, q, q_t)
 r_len = length(revolute);
 s_len = length(simple);
 t_len = length(translatory);

@@ -1,8 +1,10 @@
-% Slider crank kinematic analysis
- close all
+%% description
+% this is a kinematic analysis of a Slider crank mechanism
+% in stead of using a simple constraint a translatory is used
+% the results are the same as run_kinematic_two_pendulums
 clear
 %% Coordinates
-% ground
+% ground 
 q1 = [0; 0; 0];
 % crank
 q2 = [-0.1 * cosd(30)
@@ -71,10 +73,10 @@ simple(3).c_k = 0;
 % end
 %% translatory constraints
 translatory(1).i =1;
-translatory(1).j =3;
-translatory(1).s_i_p = [0;0];
-translatory(1).s_i_q = [-1;0];
-translatory(1).s_j_p = [-0.2;0];
+translatory(1).j =4;
+translatory(1).s_i_p = [-1;0];
+translatory(1).s_i_q = [-0.5;0];
+translatory(1).s_j_p = [-2; 0];
 % slider - use simple joints instead of translational
 
 %% Add some driving constraints
@@ -97,10 +99,11 @@ driving.d_k_tt = @(t) 0;
 %% Solve constraint equation using NR for position and velocity
 C_fun = @(t, q) constraint(revolute, simple, translatory, driving, t, q, q_0);
 Cq_fun = @(t, q) constraint_dq(revolute, simple,translatory, driving, t, q);
-Ct_fun = @(t, q) constraint_dt(revolute, simple,translatory, driving, t, q);
+Ct_fun = @(t, q, q_p) constraint_dt(revolute, simple,translatory, driving, t, q, q_p);
 g =  @(t, q, q_p) constraint_g(revolute, simple,translatory, driving, t, q, q_p);
 
 [T, Q, QP, QPP] = pos_vel_acc_NR(C_fun, Cq_fun, Ct_fun,g, 6, q_0, 0.1);
+
 
 
 %% Some verification plots
@@ -108,7 +111,7 @@ plot(Q(:, 4), Q(:, 5), ...
     Q(:, 7), Q(:, 8), ...
     Q(:, 10), Q(:, 11), ...
     0, 0, '*', 'LineWidth', 2);
-
+axis equal
 xlabel ('x')
 ylabel ('y')
 title ('positions of bodies')
@@ -141,7 +144,7 @@ plot(QPP(:, 4), QPP(:, 5), ...
     QPP(:, 7), QPP(:, 8), ...
     QPP(:, 10), QPP(:, 11), ...
     0, 0, '*', 'LineWidth', 2);
-
+axis equal
 xlabel ('a_x')
 ylabel ('a_y')
 title ('acceleration of bodies')

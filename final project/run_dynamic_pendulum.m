@@ -1,3 +1,6 @@
+%% description
+% this is a dynamic analysis of a single pendulum
+% while applying a force
 %% Define bodies
 close 
 clear
@@ -52,20 +55,22 @@ simple(2).c_k = 0;
 simple(3).i = 1;
 simple(3).k = 3;
 simple(3).c_k = 0;
-
+%% translatory constrains
+translatory =[];
+%% driving constrains
 driving = [];
 
 %% Solve constraint equation using NR for position and velocity
-C_fun = @(t, q) constraint(revolute, simple,driving, t, q);
-Cq_fun = @(t, q) constraint_dq(revolute, simple,driving, t, q);
-Ct_fun = @(t, q) constraint_dt(revolute, simple,driving, t, q);
-g =  @(t, q, q_p) constraint_g(revolute, simple,driving, t, q, q_p);
+C_fun = @(t, q) constraint(revolute, simple, translatory, driving, t, q);
+Cq_fun = @(t, q) constraint_dq(revolute, simple, translatory,driving, t, q);
+Ct_fun = @(t, q, q_p) constraint_dt(revolute, simple, translatory,driving, t, q, q_p);
+g =  @(t, q, q_p) constraint_g(revolute, simple, translatory,driving, t, q, q_p);
 
 %%[T, Q, QP, QPP] = pos_vel_acc_NR(C_fun, Cq_fun, Ct_fun,g, 6, q_0, 0.1);
 
 %% Solvin ode
 t_0 = 0;
-t_end = 10;
+t_end = 3;
 
 
 [t, u, v , a] = acceleration_ode_solve(M,sforce,C_fun,Cq_fun,Ct_fun,g, t_0,t_end,  q_0, grav, body);
@@ -87,5 +92,5 @@ plot(t, v(:, 4),'lineWidth', 2)
 plot(t, a(:, 4),'lineWidth', 2)
 
 xlabel ('t')
-title ('position, velocity and acceleration of body 3')
+title ('position, velocity and acceleration of pendulum')
 legend('position [m]', 'velocity [m/s]', 'acceleration [m/s^2]')
